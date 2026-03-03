@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dotry.me</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0c;
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.4);
+            --text-main: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* The Button */
+        #try-btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-main);
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            cursor: pointer;
+            position: absolute;
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        /* Hover and Glow States */
+        #try-btn:hover {
+            box-shadow: 0 0 25px var(--accent-glow);
+            border-color: var(--accent);
+        }
+
+        #try-btn.surrender {
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.4);
+            border-color: #4ade80;
+            transition: all 0.5s ease;
+        }
+
+        /* The Hidden Reveal Screen */
+        #reveal-screen {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background-color: #121214;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: width 0.8s ease-in-out, height 0.8s ease-in-out, opacity 0.6s ease-in-out;
+            overflow: hidden;
+        }
+
+        #reveal-screen.active {
+            width: 300vmax;
+            height: 300vmax;
+            opacity: 1;
+        }
+
+        .reveal-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease 0.6s, transform 0.5s ease 0.6s;
+            text-align: center;
+            z-index: 20;
+            position: absolute;
+        }
+
+        #reveal-screen.active .reveal-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        p {
+            color: #a1a1aa;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="try-btn">Try Me</button>
+
+    <div id="reveal-screen">
+        <div class="reveal-content">
+            <h1>You win.</h1>
+            <p>The real dotry.me is currently under construction.</p>
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('try-btn');
+        const revealScreen = document.getElementById('reveal-screen');
+        
+        let dodges = 0;
+        const maxDodges = 4;
+        let isSurrendered = false;
+
+        // Ensure the button starts perfectly centered
+        btn.style.left = `calc(50% - ${btn.offsetWidth / 2}px)`;
+        btn.style.top = `calc(50% - ${btn.offsetHeight / 2}px)`;
+
+        btn.addEventListener('mouseover', () => {
+            if (dodges < maxDodges) {
+                // Calculate safe boundaries so the button doesn't fly off screen
+                const maxX = window.innerWidth - btn.offsetWidth - 40;
+                const maxY = window.innerHeight - btn.offsetHeight - 40;
+                
+                // Keep it at least 20px away from the edges
+                const randomX = Math.max(20, Math.floor(Math.random() * maxX));
+                const randomY = Math.max(20, Math.floor(Math.random() * maxY));
+
+                btn.style.left = `${randomX}px`;
+                btn.style.top = `${randomY}px`;
+                
+                dodges++;
+            } else if (!isSurrendered) {
+                // The button gives up
+                isSurrendered = true;
+                btn.classList.add('surrender');
+                btn.innerText = "Fine. Click Me.";
+            }
+        });
+
+        btn.addEventListener('click', () => {
+            if (isSurrendered) {
+                // Hide the button and trigger the expanding circle reveal
+                btn.style.opacity = '0';
+                btn.style.pointerEvents = 'none';
+                revealScreen.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
