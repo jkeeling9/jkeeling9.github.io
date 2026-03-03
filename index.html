@@ -6,10 +6,11 @@
     <title>dotry.me</title>
     <style>
         :root {
-            --bg-color: #0a0a0c;
-            --accent: #6366f1;
-            --accent-glow: rgba(99, 102, 241, 0.4);
+            --glass-bg: rgba(20, 20, 25, 0.3);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-highlight: rgba(255, 255, 255, 0.15);
             --text-main: #f8fafc;
+            --text-muted: #94a3b8;
         }
 
         * {
@@ -19,7 +20,7 @@
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: #030305;
             color: var(--text-main);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             height: 100vh;
@@ -28,143 +29,209 @@
             justify-content: center;
             align-items: center;
             position: relative;
+            perspective: 1000px;
+        }
+
+        /* Animated Atmospheric Background Mesh */
+        .ambient-mesh {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(76, 29, 149, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(15, 118, 110, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 60% 20%, rgba(17, 24, 39, 0.5) 0%, transparent 50%);
+            animation: drift 20s ease-in-out infinite alternate;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-5%, -5%) rotate(5deg); }
+        }
+
+        /* Advanced Glassmorphism Utilities */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(150%);
+            -webkit-backdrop-filter: blur(24px) saturate(150%);
+            border: 1px solid var(--glass-border);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.5), 
+                inset 0 1px 1px var(--glass-highlight);
+            border-radius: 24px;
         }
 
         /* The Button */
         #try-btn {
-            padding: 1rem 2.5rem;
-            font-size: 1.2rem;
-            font-weight: 600;
-            letter-spacing: 2px;
+            padding: 1.2rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: 3px;
             text-transform: uppercase;
             color: var(--text-main);
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50px;
             cursor: pointer;
             position: absolute;
-            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease;
-            backdrop-filter: blur(10px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        box-shadow 0.3s ease, border-color 0.3s ease;
             z-index: 10;
+            overflow: hidden;
         }
 
-        /* Hover and Glow States */
-        #try-btn:hover {
-            box-shadow: 0 0 25px var(--accent-glow);
-            border-color: var(--accent);
+        /* Button Hover Glare */
+        #try-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            transform: skewX(-20deg);
+            transition: left 0.5s ease;
+        }
+
+        #try-btn:hover::before {
+            left: 150%;
         }
 
         #try-btn.surrender {
-            box-shadow: 0 0 20px rgba(74, 222, 128, 0.4);
-            border-color: #4ade80;
+            box-shadow: 0 0 30px rgba(74, 222, 128, 0.2), inset 0 1px 1px var(--glass-highlight);
+            border-color: rgba(74, 222, 128, 0.4);
             transition: all 0.5s ease;
         }
 
         /* The Hidden Reveal Screen */
-        #reveal-screen {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background-color: #121214;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
+        #reveal-container {
+            position: relative;
             z-index: 5;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             opacity: 0;
-            transition: width 0.8s ease-in-out, height 0.8s ease-in-out, opacity 0.6s ease-in-out;
+            transform: scale(0.9) translateY(20px);
+            transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            pointer-events: none;
+        }
+
+        #reveal-container.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+
+        /* The Final Glass Card */
+        .glass-card {
+            padding: 4rem;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
             overflow: hidden;
         }
 
-        #reveal-screen.active {
-            width: 300vmax;
-            height: 300vmax;
-            opacity: 1;
-        }
-
-        .reveal-content {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease 0.6s, transform 0.5s ease 0.6s;
-            text-align: center;
-            z-index: 20;
+        /* Dynamic Mouse Glare on the Card */
+        .glare {
             position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 2;
         }
 
-        #reveal-screen.active .reveal-content {
+        .glass-card:hover .glare {
             opacity: 1;
-            transform: translateY(0);
         }
 
-        h1 {
-            font-size: 3rem;
+        .glass-card h1 {
+            font-size: 2.5rem;
             font-weight: 300;
             margin-bottom: 1rem;
-            letter-spacing: -1px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 3;
         }
 
-        p {
-            color: #a1a1aa;
+        .glass-card p {
+            color: var(--text-muted);
             font-size: 1.1rem;
+            line-height: 1.6;
+            font-weight: 300;
+            position: relative;
+            z-index: 3;
         }
     </style>
 </head>
 <body>
 
-    <button id="try-btn">Try Me</button>
+    <div class="ambient-mesh"></div>
 
-    <div id="reveal-screen">
-        <div class="reveal-content">
+    <button id="try-btn" class="glass">Try Me</button>
+
+    <div id="reveal-container">
+        <div class="glass-card glass" id="card">
+            <div class="glare" id="glare"></div>
             <h1>You win.</h1>
-            <p>The real dotry.me is currently under construction.</p>
+            <p>The real dotry.me is currently hidden behind the glass. Check back later.</p>
         </div>
     </div>
 
     <script>
         const btn = document.getElementById('try-btn');
-        const revealScreen = document.getElementById('reveal-screen');
+        const revealContainer = document.getElementById('reveal-container');
+        const card = document.getElementById('card');
+        const glare = document.getElementById('glare');
         
         let dodges = 0;
-        const maxDodges = 4;
+        const maxDodges = 5; // Increased the difficulty slightly
         let isSurrendered = false;
 
-        // Ensure the button starts perfectly centered
+        // Center button on load
         btn.style.left = `calc(50% - ${btn.offsetWidth / 2}px)`;
         btn.style.top = `calc(50% - ${btn.offsetHeight / 2}px)`;
 
         btn.addEventListener('mouseover', () => {
             if (dodges < maxDodges) {
-                // Calculate safe boundaries so the button doesn't fly off screen
-                const maxX = window.innerWidth - btn.offsetWidth - 40;
-                const maxY = window.innerHeight - btn.offsetHeight - 40;
+                const maxX = window.innerWidth - btn.offsetWidth - 50;
+                const maxY = window.innerHeight - btn.offsetHeight - 50;
                 
-                // Keep it at least 20px away from the edges
-                const randomX = Math.max(20, Math.floor(Math.random() * maxX));
-                const randomY = Math.max(20, Math.floor(Math.random() * maxY));
+                const randomX = Math.max(50, Math.floor(Math.random() * maxX));
+                const randomY = Math.max(50, Math.floor(Math.random() * maxY));
 
                 btn.style.left = `${randomX}px`;
                 btn.style.top = `${randomY}px`;
                 
                 dodges++;
             } else if (!isSurrendered) {
-                // The button gives up
                 isSurrendered = true;
                 btn.classList.add('surrender');
-                btn.innerText = "Fine. Click Me.";
+                btn.innerText = "Access Granted";
             }
         });
 
         btn.addEventListener('click', () => {
             if (isSurrendered) {
-                // Hide the button and trigger the expanding circle reveal
+                // Fade out button, fade in the glass card
                 btn.style.opacity = '0';
                 btn.style.pointerEvents = 'none';
-                revealScreen.classList.add('active');
+                revealContainer.classList.add('active');
             }
+        });
+
+        // Dynamic Glare Effect on the Glass Card
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left; // x position within the element
+            const y = e.clientY - rect.top;  // y position within the element
+            
+            glare.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255, 255, 255, 0.15) 0%, transparent 60%)`;
         });
     </script>
 </body>
