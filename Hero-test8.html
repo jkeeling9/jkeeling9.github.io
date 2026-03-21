@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transparent Floating Network Overlay</title>
+<style>
+  /* Stripped out backgrounds - this is now a pure transparent overlay */
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    overflow-x: hidden;
+    background: transparent; 
+  }
+
+  .hero-container {
+    position: relative;
+    width: 100vw; /* In your theme, you might change this to 100% depending on the parent block */
+    height: 100vh; /* Adjust height based on your hero section needs */
+    overflow: hidden;
+    background: transparent; 
+    display: flex;
+    justify-content: center;
+    align-items: bottom;
+  }
+
+  /* --- THE FOREGROUND COUPLE --- */
+  .hero-couple {
+    position: absolute;
+    bottom: 0; 
+    height: 85vh; 
+    width: auto;
+    z-index: 5; 
+    pointer-events: none; 
+  }
+
+  /* Base styling for all icons */
+  .icon {
+    position: absolute;
+    fill: none;
+    stroke: #48cae4; 
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.5s ease-in-out; 
+  }
+
+  /* DEPTH OF FIELD CLASSES */
+  .depth-0 { filter: blur(0px); stroke-width: 1.5px; z-index: 6; }
+  .depth-1 { filter: blur(1.5px); stroke-width: 2px; z-index: 3; } 
+  .depth-2 { filter: blur(4px); stroke-width: 3px; z-index: 2; }
+  .depth-3 { filter: blur(8px); stroke-width: 4px; z-index: 1; }
+
+  /* FLOATING ANIMATIONS */
+  .float-slow { animation: float 8s ease-in-out infinite; }
+  .float-med { animation: float 6s ease-in-out infinite; }
+  .float-fast { animation: float 4s ease-in-out infinite; }
+  
+  .delay-1 { animation-delay: -1s; }
+  .delay-2 { animation-delay: -2.5s; }
+  .delay-3 { animation-delay: -4s; }
+
+  @keyframes float {
+    0% { transform: translate(-50%, -50%) translateY(0px); }
+    50% { transform: translate(-50%, -50%) translateY(-18px); }
+    100% { transform: translate(-50%, -50%) translateY(0px); }
+  }
+
+  /* EXACT PLACEMENT */
+  .pos-center { top: 50%; left: 50%; width: 100px; height: 100px; }
+  
+  /* Left Side */
+  .pos-l1 { top: 65%; left: 35%; width: 70px; height: 70px; } 
+  .pos-l2 { top: 55%; left: 18%; width: 50px; height: 50px; } 
+  .pos-l3 { top: 35%; left: 24%; width: 55px; height: 55px; } 
+  .pos-l4 { top: 30%; left: 45%; width: 40px; height: 40px; } 
+  .pos-l5 { top: 75%; left: 25%; width: 45px; height: 45px; } 
+  
+  /* Right Side */
+  .pos-r1 { top: 55%; left: 68%; width: 65px; height: 65px; } 
+  .pos-r2 { top: 28%; left: 78%; width: 60px; height: 60px; } 
+  .pos-r3 { top: 52%; left: 85%; width: 50px; height: 50px; } 
+  .pos-r4 { top: 28%; left: 58%; width: 40px; height: 40px; } 
+  .pos-r5 { top: 70%; left: 60%; width: 50px; height: 50px; } 
+
+  /* Background Faded */
+  .pos-bg1 { top: 35%; left: 12%; width: 45px; height: 45px; }
+  .pos-bg2 { top: 68%; left: 8%; width: 35px; height: 35px; }
+  .pos-bg3 { top: 25%; left: 38%; width: 80px; height: 80px; }
+  .pos-bg4 { top: 75%; left: 45%; width: 30px; height: 30px; } 
+  .pos-bg5 { top: 65%; left: 92%; width: 60px; height: 60px; }
+  .pos-bg6 { top: 40%; left: 95%; width: 45px; height: 45px; }
+  .pos-bg7 { top: 68%; left: 75%; width: 35px; height: 35px; }
+  .pos-bg8 { top: 20%; left: 65%; width: 70px; height: 70px; } 
+  .pos-bg9 { top: 85%; left: 80%; width: 40px; height: 40px; } 
+
+</style>
+</head>
+<body>
+
+<div class="hero-container">
+  
+  <svg class="icon dynamic-swap depth-0 float-med pos-center" viewBox="0 0 24 24" data-base-opacity="1"></svg>
+
+  <svg class="icon dynamic-swap depth-1 float-slow delay-1 pos-l1" viewBox="0 0 24 24" data-base-opacity="0.8"></svg>
+  <svg class="icon dynamic-swap depth-1 float-fast delay-2 pos-l2" viewBox="0 0 24 24" data-base-opacity="0.8"></svg>
+  <svg class="icon dynamic-swap depth-1 float-slow delay-3 pos-l3" viewBox="0 0 24 24" data-base-opacity="0.8"></svg>
+  <svg class="icon dynamic-swap depth-1 float-med pos-l4" viewBox="0 0 24 24" data-base-opacity="0.8"></svg>
+  <svg class="icon dynamic-swap depth-1 float-fast delay-1 pos-l5" viewBox="0 0 24 24" data-base-opacity="0.8"></svg>
+
+  <svg class="icon dynamic-swap depth-1 float-slow delay-2 pos-r1" viewBox="0 0 24 24" data-base-opacity="0.8"></svg>
+  <svg class="icon dynamic-swap depth-1 float-med delay-1 pos-r2" viewBox="0 0 24 24" data-base-opacity="0.8"></svg>
+  <svg class="icon dynamic-swap depth-1 float-slow delay-3 pos-r3" viewBox="0 0 24 24" data-base-opacity="0.8"></svg>
+  <svg class="icon dynamic-swap depth-1 float-fast pos-r4" viewBox="0 0 24 24" data-base-opacity="0.8"></svg>
+  <svg class="icon dynamic-swap depth-1 float-slow delay-2 pos-r5" viewBox="0 0 24 24" data-base-opacity="0.8"></svg>
+
+  <svg class="icon dynamic-swap depth-2 float-slow delay-2 pos-bg1" viewBox="0 0 24 24" data-base-opacity="0.5"></svg>
+  <svg class="icon dynamic-swap depth-3 float-fast pos-bg2" viewBox="0 0 24 24" data-base-opacity="0.25"></svg>
+  <svg class="icon dynamic-swap depth-3 float-med delay-1 pos-bg3" viewBox="0 0 24 24" data-base-opacity="0.25"></svg>
+  <svg class="icon dynamic-swap depth-2 float-slow delay-3 pos-bg4" viewBox="0 0 24 24" data-base-opacity="0.5"></svg>
+  <svg class="icon dynamic-swap depth-3 float-fast delay-2 pos-bg5" viewBox="0 0 24 24" data-base-opacity="0.25"></svg>
+  <svg class="icon dynamic-swap depth-2 float-med pos-bg6" viewBox="0 0 24 24" data-base-opacity="0.5"></svg>
+  <svg class="icon dynamic-swap depth-2 float-slow delay-1 pos-bg7" viewBox="0 0 24 24" data-base-opacity="0.5"></svg>
+  <svg class="icon dynamic-swap depth-3 float-slow delay-3 pos-bg8" viewBox="0 0 24 24" data-base-opacity="0.25"></svg>
+  <svg class="icon dynamic-swap depth-2 float-fast pos-bg9" viewBox="0 0 24 24" data-base-opacity="0.5"></svg>
+
+</div>
+
+<script>
+  const svgShapes = [
+    '<rect x="3" y="5" width="18" height="14" rx="2" ry="2"/><polyline points="3 7 12 13 21 7"/>', 
+    '<path d="M17.5 19c2.48 0 4.5-2.02 4.5-4.5S19.98 10 17.5 10c-.26-3.39-3.1-6-6.5-6-3.68 0-6.67 2.98-6.67 6.67a1.6 1.6 0 00.02.2A6.5 6.5 0 001 15.5C1 17.98 3.02 19 5.5 19h12z"/>', 
+    '<path d="M5 12.55a11 11 0 0114.08 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0M12 20h.01"/>', 
+    '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><path d="M17 5l-2.2 2.2"/>', 
+    '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><rect x="7" y="14" width="2" height="2"/><rect x="11" y="14" width="2" height="2"/><rect x="15" y="14" width="2" height="2"/>', 
+    '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>', 
+    '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.2 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>', 
+    '<path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>' 
+  ];
+
+  const icons = document.querySelectorAll('.dynamic-swap');
+
+  icons.forEach(icon => {
+    const randomShape = svgShapes[Math.floor(Math.random() * svgShapes.length)];
+    icon.innerHTML = randomShape;
+    icon.style.opacity = icon.getAttribute('data-base-opacity');
+  });
+
+  function swapRandomIcon() {
+    const targetIcon = icons[Math.floor(Math.random() * icons.length)];
+    const newShape = svgShapes[Math.floor(Math.random() * svgShapes.length)];
+    const baseOpacity = targetIcon.getAttribute('data-base-opacity');
+
+    targetIcon.style.opacity = 0;
+
+    setTimeout(() => {
+      targetIcon.innerHTML = newShape;
+      targetIcon.style.opacity = baseOpacity;
+    }, 500); 
+  }
+
+  setInterval(swapRandomIcon, 2500);
+</script>
+</body>
+</html>
